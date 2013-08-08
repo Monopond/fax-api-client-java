@@ -1,0 +1,1357 @@
+﻿Building A Request
+To use Monopond SOAP Java Client, start by importing ApiServiceStub.java (line 2).
+1. import net.utbox.client.ApiServiceStub;
+2. import net.utbox.client.ApiServiceStub.*;
+3. import org.apache.axiom.om.OMAbstractFactory; //for displaying response
+
+
+ApiServiceStub
+net.utbox.client.ApiServiceStub.ApiServiceStub
+An auto-generated class from Monopond WSDL by the Apache Axis2 version 1.6.2
+Constructor Summary
+	ApiServiceStub()
+Initializes a newly created ApiService object 
+	
+
+Method Summary
+	
+
+	net.utbox.client.ApiServiceStub.SendFaxResponseE
+	.sendFax(String username, String password, net.utbox.client.ApiServiceStub.SendFaxRequestE sendFaxRequest)
+sends fax/es on the platform
+	net.utbox.client.ApiServiceStub.FaxStatusResponseE
+	.faxStatus(String username, String password, net.utbox.client.ApiServiceStub.FaxStatusRequestE faxStatusRequest)
+retrieves the status, details, and results of fax messages sent
+	net.utbox.client.ApiServiceStub.StopResponseE
+	.stopFax(String username, String password, net.utbox.client.ApiServiceStub.StopFaxRequestE stopFaxRequest)
+stops a fax message from sending
+	net.utbox.client.ApiServiceStub.PauseResponseE
+	.pauseFax(String username, String password, net.utbox.client.ApiServiceStub.PauseFaxRequestE pauseFaxRequest)
+pauses a fax message before it starts transmitting
+	net.utbox.client.ApiServiceStub.ResumeResponseE
+	.resumeFax(String username, String password, net.utbox.client.ApiServiceStub.ResumeFaxRequestE resumeFaxRequest)
+resumes a paused fax message
+	
+
+
+
+
+
+________________
+
+
+Sending A Fax Request
+SendFax Request allows you to send fax/es on the platform.
+Sending a single fax:
+To send a fax to a single destination, a request similar to the following example can be used:       
+1.         //create a new instance of ApiServiceStub
+2.         ApiServiceStub apiServiceStub = new ApiServiceStub();
+3.         
+4.         //create a new ApiFaxDocument
+5.         ApiFaxDocument apiFaxDocument = new ApiFaxDocument();
+6.         
+7.         //set the filedata (in base64 format) and filename
+8.         apiFaxDocument.setFileData("VGhpcyBpcyBhIGZheA==");
+9.         apiFaxDocument.setFileName("test.txt");
+10. 11.         Documents_type0 documentsType0 = new Documents_type0();
+12.         documentsType0.addDocument(apiFaxDocument);
+13.         
+14.         //create a new fax message
+15.         ApiFaxMessage apiFaxMessage = new ApiFaxMessage();
+16.         apiFaxMessage.setMessageRef("test-1-1-1");
+17.         apiFaxMessage.setSendTo("6011111111");
+18.         apiFaxMessage.setSendFrom("Test Fax");
+19.         apiFaxMessage.setResolution(FaxResolution.normal);
+20.         apiFaxMessage.setDocuments(documentsType0);
+21.  
+22.         //add the fax message to faxMessagesType1
+23.         FaxMessages_type1 faxMessagesType1 = new FaxMessages_type1();
+24.         faxMessagesType1.addFaxMessage(apiFaxMessage);
+25.         
+26.         //create an instance of SendFaxRequest
+27.         SendFaxRequest sendFaxRequest = new SendFaxRequest();
+28.         sendFaxRequest.setFaxMessages(faxMessagesType1);
+29.         
+30.         SendFaxRequestE sendFaxRequestE = new SendFaxRequestE();
+31.         sendFaxRequestE.setSendFaxRequest(sendFaxRequest);
+32. 33.         //call the sendFax method
+34.         SendFaxResponseE response = apiServiceStub.sendFax("myUsername", 
+35.         "myPassword", sendFaxRequestE);
+36.         System.out.println(response.getOMElement(null, 
+37.         OMAbstractFactory.getOMFactory()).toStringWithConsume());
+38.         }
+  
+________________
+Sending multiple faxes:
+To send faxes to multiple destinations, a request similar to the following example can be used. Please note the addition of another “FaxMessage”:
+1.         //create a new instance of ApiServiceStub
+2.         ApiServiceStub apiServiceStub = new ApiServiceStub();
+3.         
+4.         //create a new ApiFaxDocument
+5.         ApiFaxDocument apiFaxDocument = new ApiFaxDocument();
+6.         
+7.         //set the filedata (in base64 format) and filename
+8.         apiFaxDocument.setFileData("VGhpcyBpcyBhIGZheA==");
+9.         apiFaxDocument.setFileName("test.txt");
+10. 11.         Documents_type0 documentsType0 = new Documents_type0();
+12.         documentsType0.addDocument(apiFaxDocument);
+13.   
+14.         //create your fax messages
+15.         ApiFaxMessage apiFaxMessage1 = new ApiFaxMessage();
+16.         apiFaxMessage1.setMessageRef("test-1-1-1");
+17.         apiFaxMessage1.setSendTo("6011111111");
+18.         apiFaxMessage1.setSendFrom("Test Fax");
+19.         apiFaxMessage1.setResolution(FaxResolution.normal);
+20.         apiFaxMessage1.setDocuments(documentsType0);
+21. 22.         ApiFaxMessage apiFaxMessage2 = new ApiFaxMessage();
+23.         apiFaxMessage2.setMessageRef("test-1-1-1");
+24.         apiFaxMessage2.setSendTo("6011111111");
+25.         apiFaxMessage2.setSendFrom("Test Fax");
+26.         apiFaxMessage2.setResolution(FaxResolution.normal);
+27.         apiFaxMessage2.setDocuments(documentsType0);
+28.  
+29.         //add the two fax messages to faxMessagesType1
+30.         FaxMessages_type1 faxMessagesType1 = new FaxMessages_type1();
+31.         faxMessagesType1.addFaxMessage(apiFaxMessage1);
+32.         faxMessagesType1.addFaxMessage(apiFaxMessage2);
+33.  
+34.         //create an instance of SendFaxRequest
+35.         SendFaxRequest sendFaxRequest = new SendFaxRequest();
+36.         sendFaxRequest.setFaxMessages(faxMessagesType1);
+37. 38.         SendFaxRequestE sendFaxRequestE = new SendFaxRequestE();
+39.         sendFaxRequestE.setSendFaxRequest(sendFaxRequest);
+40.  
+41.         //call the sendFax method
+42.         SendFaxResponseE response = apiServiceStub.sendFax("myUsername", 
+43.         "myPassword", sendFaxRequestE);
+44.         System.out.println(response.getOMElement(null,    
+45.         OMAbstractFactory.getOMFactory()).toStringWithConsume());
+
+
+Sending faxes to multiple destinations with the same document (broadcasting):
+To send the same fax content to multiple destinations (broadcasting), a request similar to the example below can be used. 
+This method is recommended for broadcasting as it takes advantage of the multiple tiers in the send request. This eliminates the repeated parameters out of the individual fax message elements which are instead inherited from the parent send fax request. 
+
+
+1.         //create a new instance of ApiServiceStub
+2.         ApiServiceStub apiServiceStub = new ApiServiceStub();
+3.  
+4.         //create a new ApiFaxDocument
+5.         ApiFaxDocument apiFaxDocument = new ApiFaxDocument();
+6.  
+7.         //set the filedata (in base64 format) and filename
+8.         apiFaxDocument.setFileData("VGhpcyBpcyBhIGZheA==");
+9.         apiFaxDocument.setFileName("test.txt");
+10. 11.         Documents_type1 documentsType1 = new Documents_type1();
+12.         documentsType1.addDocument(apiFaxDocument);
+13.  
+14.         //create your fax messages
+15.         ApiFaxMessage apiFaxMessage1 = new ApiFaxMessage();
+16.         apiFaxMessage1.setMessageRef("test-1-1-1");
+17.         apiFaxMessage1.setSendTo("6011111111");
+18. 19.         ApiFaxMessage apiFaxMessage2 = new ApiFaxMessage();
+20.         apiFaxMessage2.setMessageRef("test-1-1-1");
+21.         apiFaxMessage2.setSendTo("6011111111");
+22.  
+23.         //add the two fax messages to faxMessagesType1
+24.         FaxMessages_type1 faxMessagesType1 = new FaxMessages_type1();
+25.         faxMessagesType1.addFaxMessage(apiFaxMessage1);
+26.         faxMessagesType1.addFaxMessage(apiFaxMessage2);
+27.  
+28.         //create an instance of SendFaxRequest
+29.         SendFaxRequest sendFaxRequest = new SendFaxRequest();
+30.         sendFaxRequest.setFaxMessages(faxMessagesType1);
+31.         sendFaxRequest.setBroadcastRef("Broadcast-test-1");
+32.         sendFaxRequest.setSendRef("Send-Ref-1");
+33.         sendFaxRequest.setDocuments(documentsType1);
+34.         sendFaxRequest.setSendFrom("Test Fax");
+35. 36.         SendFaxRequestE sendFaxRequestE = new SendFaxRequestE();
+37.         sendFaxRequestE.setSendFaxRequest(sendFaxRequest);
+38.  
+39.         //call the sendFax method
+40.         SendFaxResponseE response = apiServiceStub.sendFax("username", 
+41.         "password", sendFaxRequestE);
+42. 43.         System.out.println(response.getOMElement(null, 
+44.         OMAbstractFactory.getOMFactory()).toStringWithConsume());
+
+
+SendFaxRequestE (Wrapper)
+net.utbox.client.ApiServiceStub.SendFaxRequestE
+This class is used as a wrapper for sending a fax status request.
+Constructor Summary
+	SendFaxRequestE()
+Initializes a newly created SendFaxRequestE object 
+	
+
+Method Summary
+	
+
+	void
+	.setSendFaxRequest(net.utbox.client.ApiServiceStub.SendFaxRequest sendFaxRequest)
+sets the send fax request
+	
+
+SendFaxRequest
+net.utbox.client.ApiServiceStub.SendFaxRequest
+
+
+SendFax Request allows you to send fax/es on the platform.
+FaxStatusRequest should be wrapped in net.utbox.client.ApiServiceStub.SendFaxE to be used in ApiServiceStub.sendStatus()
+Constructor Summary
+	SendFaxRequest()
+Initializes a newly created SendFaxRequest object 
+	
+
+Method Summary
+	
+
+	void
+	.setBroadcastRef(String broadcastRef)
+allows the user to tag all faxes in this request with a user-defined broadcast reference. These faxes can then be retrieved at a later point based on this reference
+	void
+	.setSendRef(String sendRef)
+similar to the BroadcastRef, this allows the user to tag all faxes in this request with a send reference. The SendRef is used to represent all faxes in this request only, so naturally it must be unique
+	void
+	.setFaxMessages(net.utbox.client.ApiServiceStub.FaxMessages_type1 faxMessages)
+faxMessages describe each individual fax message and its destination
+Required
+	void
+	.setSendFrom(String sendFrom)
+a customisable string used to identify the sender of the fax. Also known as the Transmitting Subscriber identification (TSID). The maximum string length is 32 characters
+Default: Fax
+	void
+	.setDocuments(net.utbox.client.ApiServiceStub.Documents_type1)
+each FaxDocument object describes a fax document to be sent. Multiple documents can be defined here which will be concatenated and sent in the same message
+Required
+	void
+	.setResolution(net.utbox.client.ApiServiceStub.FaxResolution faxResolution)
+resolution quality of the fax document. This option may incur additional costs. Please contact your account manager for more information
+Default: normal 
+	void
+	.setScheduledStartTime(String dateTime)
+date and time the transmission of the fax will start
+Default: Current time (immediate sending)
+	void
+	.setRetries(int retries)
+number of times to retry sending the fax if it fails. Each account has a maximum number of retries that can be changed by consultation with your account manager
+Default: Account default
+	void
+	.setBusyRetries(int busyRetries)
+certain fax errors such as “NO_ANSWER” or “BUSY” are not included in the above retries limit and can be set separately. Each account has a maximum number of busy retries that can be changed by consultation with your account manager
+Default: Account default
+	void
+	.setHeaderFormat(String headerFormat)
+allows the header format that appears at the top of the transmitted fax to be changed. See below for an explanation of how to format this field
+Default: From: X, To: X
+	
+
+
+
+FaxResolution
+net.utbox.client.ApiServiceStub.FaxResolution
+Method Summary
+	
+
+	String
+	.getValue()
+gets the resolution of fax message
+	
+
+Value
+	
+
+	String
+	normal
+	String
+	fine
+	
+
+Levels
+	Description
+	normal
+	Normal standard resolution (98 scan lines per inch)
+	fine
+	Fine resolution (196 scan lines per inch)
+	FaxMessage_type1
+net.utbox.client.ApiServiceStub.FaxMessages_type1
+Constructor Summary
+	FaxMessages_type1()
+Initializes a newly created FaxMessages_type1 object 
+	
+
+Method Summary
+	
+
+	void
+	.addFaxMessage(net.utbox.client.ApiServiceStub.ApiFaxMessage faxMessage)
+adds a single fax message
+	void
+	.setFaxMessage(net.utbox.client.ApiServiceStub.ApiFaxMessage [] faxMessages)
+adds an array of fax messages
+	ApiFaxMessage
+net.utbox.client.ApiServiceStub.ApiFaxMessage
+This represents a single fax message being sent to a destination.
+Constructor Summary
+	ApiFaxMessage()
+Initializes a newly created ApiFaxMessage object 
+	
+
+Method Summary
+	
+
+	void
+	.setMessageRef(String messageRef)
+sets a unique user-provided identifier that is used to identify the fax message. This can be used at a later point to retrieve the results of the fax message
+Required
+	void
+	.setSendTo(String sendTo)
+sets the phone number the fax message will be sent to
+Required
+	void
+	.setSendFrom(String sendFrom)
+a customisable string used to identify the sender of the fax. Also known as the Transmitting Subscriber identification (TSID). The maximum string length is 32 characters
+Default: Empty
+	void
+	.setDocuments(net.utbox.client.ApiServiceStub.Documents_type0)
+each FaxDocument object describes a fax document to be sent. Multiple documents can be defined here which will be concatenated and sent in the same message
+Required
+	void
+	.setResolution(net.utbox.client.ApiServiceStub.FaxResolution faxResolution)
+resolution quality of the fax document. This option may incur additional costs. Please contact your account manager for more information
+Default: normal 
+	void
+	.setScheduledStartTime(String dateTime)
+date and time the transmission of the fax will start
+Default: Current time (immediate sending)
+	void
+	.setRetries(int retries)
+number of times to retry sending the fax if it fails. Each account has a maximum number of retries that can be changed by consultation with your account manager
+Default: Account default
+	void
+	.setBusyRetries(int busyRetries)
+certain fax errors such as “NO_ANSWER” or “BUSY” are not included in the above retries limit and can be set separately. Each account has a maximum number of busy retries that can be changed by consultation with your account manager
+Default: Account default
+	void
+	.setHeaderFormat(String headerFormat)
+allows the header format that appears at the top of the transmitted fax to be changed. See below for an explanation of how to format this field
+Default: From: X, To: X
+	Documents_type0
+net.utbox.client.ApiServiceStub.Documents_type0
+Constructor Summary
+	Documents_type0()
+Initializes a newly created Documents_type0 object 
+	
+
+Method Summary
+	
+
+	void
+	.addFaxMessage(net.utbox.client.ApiServiceStub.ApiFaxDocument faxDocument)
+adds a single fax document
+	void
+	.setFaxMessage(net.utbox.client.ApiServiceStub.ApiFaxDocument [] faxDocuments)
+adds an array of fax documents
+	Documents_type1
+net.utbox.client.ApiServiceStub.Documents_type1
+Constructor Summary
+	Documents_type1()
+Initializes a newly created Documents_type1 object 
+	
+
+Method Summary
+	
+
+	void
+	.addFaxMessage(net.utbox.client.ApiServiceStub.ApiFaxDocument faxDocument)
+adds a single fax document
+	void
+	.setFaxMessage(net.utbox.client.ApiServiceStub.ApiFaxDocument [] faxDocuments)
+adds an array of fax documents
+	ApiFaxDocument
+net.utbox.client.ApiServiceStub.ApiFaxDocuments
+Represents a fax document to be sent through the system. Supported file types are: PDF, TIFF, PNG, JPG, GIF, TXT, PS, RTF, DOC, DOCS, XLS, XLSX, PPT, PPTX.
+Constructor Summary
+	ApiFaxDocument()
+Initializes a newly created ApiDocument object 
+	
+
+Method Summary
+	
+
+	void
+	.setFileName(String fileName)
+sets the filename of the document including extension. This is important as it is used to help identify the document MIME type
+Required
+	void
+	.setFileData(String fileData)
+sets the document encoded in Base64 format
+Required
+	void
+	.setOrder(int order)
+sets the order of document. If multiple documents are defined on a message, this value will determine the order in which they will be transmitted
+	
+
+
+
+
+
+
+
+
+
+Header Format:
+Determines the format of the header line that is printed on the top of the transmitted fax message. This is set to “From %from%, To %to%| %a %b %d %H:%M %Y” by default which produces the following:
+From TSID, To 61022221234        Mon Aug 28 15:32 2012                                1 of 1
+The following variables can be used in the format string:
+Value
+	Description
+	%from%
+	The value of the SendFrom field in the message
+	%to%
+	The value of the SendTo field in the message
+	%a
+	Weekday name (abbreviated)
+	%A
+	Weekday name
+	%b
+	Month name (abbreviated)
+	%B
+	Month name
+	%d
+	Day of the month as a decimal (01 - 31)
+	%m
+	Month as a decimal (01 - 12)
+	%y
+	Year as a decimal (abbreviated)
+	%Y
+	Year as a decimal
+	%H
+	Hour as a decimal using 24-hour clock (00 - 23)
+	%I
+	Hour as a decimal using 12-hour clock (01 - 12)
+	%M
+	Minute as a decimal (00 - 59)
+	%S
+	Second as a decimal (00 - 59)
+	%p
+	AM or PM
+	%j
+	Day of the year as a decimal (001 - 366)
+	%U
+	Week of the year as a decimal (Sunday as first day of the week) (00 - 53)
+	%W
+	Week of the year as a decimal (Monday as first day of the week) (00 - 53)
+	%w
+	Day of the week as a decimal (0 - 6) (Sunday being 0)
+	%%
+	A literal % character
+	
+
+
+
+________________
+
+
+SendFaxResponseE (Wrapper)
+net.utbox.client.ApiServiceStub.SendFaxResponseE
+This class is used as a wrapper of SendFaxResponse.
+Constructor Summary
+	SendFaxResponseE()
+Initializes a newly created SendFaxResponseE object 
+	
+
+Method Summary
+	
+
+	void
+	.getOMElement(QName parentQname, OMFactory factory)
+	net.utbox.client.ApiServiceStub.SendFaxResponse
+	.getSendFaxResponse()
+	
+
+SendFaxResponse
+net.utbox.client.ApiServiceStub.SendFaxResponse
+The response received from a SendFaxRequest matches the response you receive when calling the FaxStatus method call with a “send” verbosity level.
+Constructor Summary
+	SendFaxResponse()
+Initializes a newly created SendFaxResponse object 
+	________________
+
+
+FaxStatus Request
+net.utbox.client.ApiServiceStub.FaxStatusRequest
+This function provides you with a method of retrieving the status, details, and results of fax messages sent. While this is a legitimate method of retrieving results, we strongly advise that you take advantage of our callback service, which will push these fax results to you as they are completed.
+When making a status request, you must provide at least a BroadcastRef, SendRef, or MessageRef. The function will also accept a combination of these to further narrow the request query.
+1. Limiting by a BroadcastRef allows you to retrieve faxes contained in a group of send requests
+2. Limiting by SendRef allows you to retrieve faxes contained in a single send request
+3. Limitting by MessageRef allows you to retrieve a single fax message
+There are multiple levels of verbosity available in the request; these are explained in detail below. You can also find full examples below.
+FaxStatusRequest should be wrapped in net.utbox.client.ApiServiceStub.FaxStatusRequestE to be used in ApiServiceStub.faxStatus()
+Constructor Summary
+	FaxStatusRequest()
+Initializes a newly created FaxStatusRequest object 
+	
+
+Method Summary
+	
+
+	void
+	.setBroadcastRef(String broadcastRef)
+sets user-defined broadcast reference
+	void
+	.setSendRef(String sendRef)
+sets user-defined send reference
+	void
+	.setMessageRef(String messageRef)
+sets user-defined message reference
+	void
+	.setVerbosity(net.utbox.client.ApiServiceStub.FaxStatusLevel faxStatusLevel)
+sets the level of detail in the status response. Please see below for a list of possible values.
+	
+
+FaxStatusLevel
+net.utbox.client.ApiServiceStub.FaxStatusLevel
+Verbosity Levels
+	
+
+	FaxStatusLevel.brief
+	Gives you an overall view of the messages. This simply shows very high-level statistics, consisting of counts of how many faxes are at each status (i.e. processing, queued, sending) and totals of the results of these faxes (success, failed, blocked).
+	FaxStatusLevel.send
+	Includes the results from “brief” while also including an itemised list of each fax message in the request
+	FaxStatusLevel.details
+	Includes the results from “send” along with details of the parameters used to send the fax messages
+	FaxStatusLevel.results
+	Includes the results from “send” along with the sending results of the fax messages
+	FaxStatusLevel.all
+	Includes the results from both “details” and “results” along with some extra uncommon fields
+	
+
+FaxStatusRequestE (Wrapper)
+net.utbox.client.ApiServiceStub.FaxStatusRequestE
+This class is used as a wrapper for sending a fax status request.
+Constructor Summary
+	FaxStatusRequestE()
+Initializes a newly created FaxStatusRequestE object 
+	
+
+Method Summary
+	
+
+	void
+	.setFaxStatusRequest(net.utbox.client.ApiServiceStub.FaxStatusRequest faxStatusRequest)
+sets the fax status request
+	
+
+Status Request with “brief” verbosity:
+1.         // Setup faxStatusRequest
+2.         FaxStatusRequest faxStatusRequest = new FaxStatusRequest();
+3.         faxStatusRequest.setBroadcastRef("test-ref");
+4.         faxStatusRequest.setVerbosity(FaxStatusLevel.brief);
+5.         
+6.         FaxStatusRequestE faxStatusRequestE = new FaxStatusRequestE();
+7.         faxStatusRequestE.setFaxStatusRequest(faxStatusRequest);
+8.         
+9.         // Call fax status method
+10.         SendFaxResponseE response = apiServiceStub.faxStatus("username", 
+11.         "password", faxStatusRequestE)
+
+
+Status Request with “send” verbosity:
+1.         // Setup faxStatusRequest
+2.         FaxStatusRequest faxStatusRequest = new FaxStatusRequest();
+3.         faxStatusRequest.setBroadcastRef("test-ref");
+4.         faxStatusRequest.setVerbosity(FaxStatusLevel.send);
+5. 6.         FaxStatusRequestE faxStatusRequestE = new FaxStatusRequestE();
+7.         faxStatusRequestE.setFaxStatusRequest(faxStatusRequest);
+8.         
+9.         // Call fax status method
+10.         SendFaxResponseE response = apiServiceStub.faxStatus("username", 
+11.         "password", faxStatusRequestE)
+
+
+Status Request with “details” verbosity:
+1.         // Setup faxStatusRequest
+2.         FaxStatusRequest faxStatusRequest = new FaxStatusRequest();
+3.         faxStatusRequest.setBroadcastRef("test-ref");
+4.         faxStatusRequest.setVerbosity(FaxStatusLevel.details);
+5. 6.         FaxStatusRequestE faxStatusRequestE = new FaxStatusRequestE();
+7.         faxStatusRequestE.setFaxStatusRequest(faxStatusRequest);
+8.         
+9.         // Call fax status method
+10.         SendFaxResponseE response = apiServiceStub.faxStatus("username", 
+11.         "password", faxStatusRequestE)
+
+
+Status Request with “results” verbosity:
+1.     // Setup faxStatusRequest
+2.         FaxStatusRequest faxStatusRequest = new FaxStatusRequest();
+3.         faxStatusRequest.setBroadcastRef("test-ref");
+4.         faxStatusRequest.setVerbosity(FaxStatusLevel.results);
+5. 6.         FaxStatusRequestE faxStatusRequestE = new FaxStatusRequestE();
+7.         faxStatusRequestE.setFaxStatusRequest(faxStatusRequest);
+8.         
+9.         // Call fax status method
+10.         SendFaxResponseE response = apiServiceStub.faxStatus("username", 
+11.         "password", faxStatusRequestE)
+
+
+FaxStatusResponseE (Wrapper)
+net.utbox.client.ApiServiceStub.FaxStatusResponseE
+This class is used as a wrapper of fax status response.
+Constructor Summary
+	FaxStatusResponseE()
+Initializes a newly created FaxStatusResponseE object 
+	
+
+Method Summary
+	
+
+	void
+	.getOMElement(QName parentQname, OMFactory factory)
+	net.utbox.client.ApiServiceStub.FaxStatusResponse
+	.getFaxStatusResponse()
+	________________
+
+
+FaxStatusResponse
+net.utbox.client.ApiServiceStub.FaxStatusResponse
+The response received depends entirely on the verbosity level specified.
+Constructor Summary
+	FaxStatusResponse()
+Initializes a newly created FaxStatusResponse object 
+	
+
+Method Summary
+	
+
+	net.utbox.client.ApiServiceStub.FaxStatusTotals
+	.getFaxStatusTotals()
+gets the counts of how many faxes are at each status
+Verbosity: brief
+	net.utbox.client.ApiServiceStub.FaxResultsTotals
+	.getFaxResultsTotals()
+gets the totals of the end results of the faxes
+Verbosity: brief
+	net.utbox.client.ApiServiceStub.FaxMessages_type0
+	.getFaxMessages()
+gets the list of each fax in the query
+Verbosity: send
+	
+
+FaxStatusTotals
+net.utbox.client.ApiServiceStub.FaxStatusTotals
+Contains the total count of how many faxes are at each status.
+Method Summary
+	
+
+	long
+	.getPending()
+gets the count of pending fax on the system and waiting to be processed
+Verbosity: brief
+	long
+	.getProcessing()
+gets the count of fax in the initial processing stages
+Verbosity: brief
+	long
+	.getQueued()
+gets the count of processed fax in queued, ready to send out at the send time
+Verbosity: brief
+	long
+	.getStarting()
+gets the count of fax that ready to be sent out
+Verbosity: brief
+	long
+	.getSending()
+gets the count of fax that has been spooled to our servers and is in the process of being sent out
+Verbosity: brief
+	long
+	.getPausing()
+gets the count of fax that has been told to pause
+Verbosity: brief[a]
+	long
+	.getPaused()
+gets the count of fax that is currently paused
+Verbosity: brief
+	long
+	.getResuming()
+gets the count of fax that has been told to resume. After the resume has been confirmed, it is set back to the “sending” status.
+Verbosity: brief
+	long
+	.getStopping()
+get the count of fax that has been told to stop. After the stop has been confirmed, it is set to the “finalizing” status.
+Verbosity: brief
+	long
+	.getFinalizing()
+gets the count of fax that has finished sending and the results are being processed
+Verbosity: brief
+	long
+	.getDone()
+gets the count of fax that has completed and no further actions will take place. The detailed results are available at this status.
+Verbosity: brief
+	
+
+
+
+FaxResultsTotals
+net.utbox.client.ApiServiceStub.FaxResultsTotals
+Contains the total count of how many faxes ended in each result, as well as some additional totals.
+Method Summary
+	
+
+	long
+	.getSuccess()
+gets the count of fax that has successfully been delivered to its destination
+Verbosity: brief
+	long
+	.getBlocked()
+gets the count of fax that has been blocked because the destination number was found in one of the blocklists
+Verbosity: brief
+	long
+	.getFailed()
+gets the count of fax that has failed getting to its destination
+Verbosity: brief
+	long
+	.getTotalAttempts()
+gets the total attempts made in the reference context
+Verbosity: brief
+	long
+	.getTotalFaxDuration()
+gets the total time spent on the line in the reference context
+Verbosity: brief
+	long
+	.getTotalPages()
+gets the total pages sent in the reference context
+Verbosity: brief
+	
+
+FaxMessages_type0
+net.utbox.client.ApiServiceStub.FaxMessages_type0
+The response received depends entirely on the verbosity level specified.
+Method Summary
+	
+
+	net.utbox.client.ApiServiceStub.ApiFaxMessageStatus [ ]
+	.getFaxMessage()
+gets an array of fax message statuses
+Verbosity: brief
+	
+
+ApiFaxMessageStatus
+net.utbox.client.ApiServiceStub.ApiFaxMessagesStatus
+The response received depends entirely on the verbosity level specified.
+Method Summary
+	
+
+	String
+	.getMessageRef()
+gets user-defined message reference
+Verbosity: send
+	String
+	.getSendRef()
+gets user-defined send reference
+Verbosity: send
+	String
+	.getBroadcastRef()
+gets user-defined broadcast reference
+Verbosity: send
+	String
+	.getSendTo()
+Verbosity: send
+	net.utbox.client.ApiServiceStub.FaxUserStatus
+	.getStatus()
+gets the status of the fax message
+Verbosity: send
+	net.utbox.client.ApiServiceStub.ApiFaxMessageStatusDetails
+	.getFaxDetails()
+gets the details and settings the fax was sent with
+Verbosity: details
+	net.utbox.client.ApiServiceStub.FaxResults_type0
+	.getFaxResults()
+gets the results of each attempt at sending the fax message and their connection details
+Verbosity: results
+	FaxUserStatus
+net.utbox.client.ApiServiceStub.FaxUserStatus
+
+
+Method Summary
+	
+
+	String
+	.getValue()
+gets the status of fax message
+	
+
+Value
+	
+
+	String
+	pending
+	String
+	processing
+	String
+	queued
+	String
+	starting
+	String
+	sending
+	String
+	pausing
+	String
+	paused
+	String
+	resuming
+	String
+	stopping
+	String
+	finalizing
+	String
+	done
+	
+
+ApiFaxMessageStatusDetails
+net.utbox.client.ApiServiceStub.ApiFaxMessageStatusDetails
+Method Summary
+	
+
+	String
+	.getSendFrom()
+Verbosity: details
+	net.utbox.client.ApiServiceStub.FaxResolution
+	.getFaxResolution()
+gets resolution of fax
+Verbosity: details
+	int
+	.getRetries()
+Verbosity: details
+	int
+	.getBusyRetries()
+Verbosity: details
+	String
+	.getHeaderFormat()
+Verbosity: details
+	
+
+FaxResolution
+net.utbox.client.ApiServiceStub.FaxResolution
+Method Summary
+	
+
+	String
+	.getValue()
+gets the resolution of fax message
+	
+
+Value
+	
+
+	String
+	normal
+	String
+	fine
+	
+
+Levels
+	Description
+	normal
+	Normal standard resolution (98 scan lines per inch)
+	fine
+	Fine resolution (196 scan lines per inch)
+	
+
+FaxResults_type0
+net.utbox.client.ApiServiceStub.FaxResults_type0
+Method Summary
+	
+
+	net.utbox.client.ApiServiceStub.ApiFaxMessageStatusResults [ ]
+	.getFaxResult()
+gets fax results
+	
+
+
+
+ApiFaxMessageStatusResults
+net.utbox.client.ApiServiceStub.ApiFaxMessageStatusResults
+Method Summary
+	
+
+	int
+	.getAttempt()
+gets the attempt number of the FaxResult
+Verbosity: results
+	net.utbox.client.ApiServiceStub.FaxResult
+	.getResult()
+gets the result of fax message
+Verbosity: results
+	net.utbox.client.ApiServiceStub.FaxErrorAdapter
+	.getError()
+gets the error code if the fax was not successful
+Verbosity: results
+	String
+	.getCost()
+gets the final cost of the fax message
+Verbosity: results
+	int
+	.getPages()
+gets the total pages sent to the end fax machine
+Verbosity: results
+	Calendar
+	.getScheduledStartTime()
+gets the date and time the fax is scheduled to start
+Verbosity: results
+	Calendar
+	.getDateCallStarted()
+gets the date and time the fax started transmitting
+Verbosity: results
+	Calendar
+	.getDateCallEnded()
+gets the date and time the fax finished transmitting
+Verbosity: results
+	FaxResult
+net.utbox.client.ApiServiceStub.FaxResult
+
+
+Method Summary
+	
+
+	String
+	.getValue()
+gets fax result value
+	
+
+Value
+	
+
+	String
+	success
+	String
+	blocked
+	String
+	failed
+	
+
+
+
+________________
+
+
+FaxErrorAdapter
+net.utbox.client.ApiServiceStub.FaxErrorAdapter
+Method Summary
+	
+
+	String
+	.getCode()
+gets error code
+	String
+	.getName()
+gets error name
+	
+
+Error Code
+	Error Name
+	DOCUMENT_UNSUPPORTED
+	Unsupported document type
+	DOCUMENT_FAILED_CONVERSION
+	Document failed conversion
+	FUNDS_INSUFFICIENT
+	Insufficient funds
+	FUNDS_FAILED
+	Failed to transfer funds
+	BLOCK_ACCOUNT
+	Number cannot be sent from this account
+	BLOCK_GLOBAL
+	Number found in the Global blocklist
+	BLOCK_SMART
+	Number found in the Smart blocklist
+	BLOCK_DNCR
+	Number found in the DNCR blocklist
+	BLOCK_CUSTOM
+	Number found in a user specified blocklist
+	FAX_NEGOTIATION_FAILED
+	Negotiation failed
+	FAX_EARLY_HANGUP
+	Early hang-up on call
+	FAX_INCOMPATIBLE_MACHINE
+	Incompatible fax machine
+	FAX_BUSY
+	Phone number busy
+	FAX_NUMBER_UNOBTAINABLE
+	Number unobtainable
+	FAX_BUSY
+	Phone number busy
+	FAX_NUMBER_UNOBTAINABLE
+	Number unobtainable
+	FAX_SENDING_FAILED
+	Sending fax failed
+	FAX_CANCELLED
+	Cancelled
+	FAX_NO_ANSWER
+	No answer
+	FAX_UNKNOWN
+	Unknown fax error
+	
+
+
+
+
+
+StopFaxRequestE (Wrapper)
+net.utbox.client.ApiServiceStub.StopFaxRequestE
+This class is used as a wrapper for stopping a fax request.
+Constructor Summary
+	StopFaxRequestE()
+Initializes a newly created StopFaxRequestE object 
+	
+
+Method Summary
+	
+
+	void
+	.setStopFaxRequest(net.utbox.client.ApiServiceStub.StopFaxRequest stopFaxRequest)
+sets the stop fax request
+	
+
+StopFax Request
+net.utbox.cient.ApiServiceStub.StopFax
+Stops a fax message from sending. This fax message must either be paused, queued, starting or sending. Please note that fax cannot be stopped if the fax is currently in the process of being transmitted to the destination device.
+When making a stop request, you must provide at least a BroadcastRef, SendRef, or MessageRef. The function will also accept a combination of these to further narrow the request query.
+StopFaxRequest should be wrapped in net.utbox.client.ApiServiceStub.StopFaxRequestE to be used in ApiServiceStub.stopFax()
+Constructor Summary
+	StopFaxRequest()
+Initializes a newly created StopFaxRequest object 
+	
+
+Method Summary
+	
+
+	void
+	.setBroadcastRef(String broadcastRef)
+sets user-defined broadcast reference
+	void
+	.setSendRef(String sendRef)
+sets user-defined send reference
+	void
+	.setMessageRef(String messageRef)
+sets user-defined message reference
+	
+
+
+
+StopFax Request limiting by BroadcastRef:
+1.         // Setup stopFaxRequest
+2.         StopFaxRequest stopFaxRequest = new StopFaxRequest();
+3.         stopFaxRequest.setBroadcastRef("broadcast-ref-1");
+4.         
+5.         StopFaxRequestE stopFaxRequestE = new StopFaxRequestE();
+6.         stopFaxRequestE.setStopFaxRequest(stopFaxRequest);
+7. 8.         SendFaxResponseE response = apiServiceStub.stopFax("username", 
+9.         "password", stopFaxRequestE);
+
+
+StopFax Request limiting by SendRef:
+1.         // Setup stopFaxRequest
+2.         StopFaxRequest stopFaxRequest = new StopFaxRequest();
+3.         stopFaxRequest.setSendRef("send-ref-1");
+4.         
+5.         StopFaxRequestE stopFaxRequestE = new StopFaxRequestE();
+6.         stopFaxRequestE.setStopFaxRequest(stopFaxRequest);
+7. 8.         SendFaxResponseE response = apiServiceStub.stopFax("username", 
+9.         "password", stopFaxRequestE);
+
+
+StopFax Request limiting by MessageRef:
+1.         // Setup stopFaxRequest
+2.         StopFaxRequest stopFaxRequest = new StopFaxRequest();
+3.         stopFaxRequest.setMessageRef("message-ref-1");
+4.         
+5.         StopFaxRequestE stopFaxRequestE = new StopFaxRequestE();
+6.         stopFaxRequestE.setStopFaxRequest(stopFaxRequest);
+7. 8.         SendFaxResponseE response = apiServiceStub.stopFax("username", 
+9.         "password", stopFaxRequestE);
+
+
+
+
+
+
+
+
+________________
+
+
+StopFaxResponseE (Wrapper)
+net.utbox.client.ApiServiceStub.StopFaxResponseE
+This class is used as a wrapper of StopFaxResponse.
+Constructor Summary
+	StopFaxResponseE()
+Initializes a newly created StopFaxResponseE object 
+	
+
+Method Summary
+	
+
+	void
+	.getOMElement(QName parentQname, OMFactory factory)
+	net.utbox.client.ApiServiceStub.StopFaxResponse
+	.getStopFaxResponse()
+	
+
+StopFaxResponse
+net.utbox.client.ApiServiceStub.StopFaxResponse
+The response received from a StopFaxRequest matches the response you receive when calling the FaxStatus method call with a “send” verbosity level.
+Constructor Summary
+	StopFaxResponse()
+Initializes a newly created StopFaxResponse object 
+	
+
+
+
+
+
+________________
+
+
+PauseFaxRequestE (Wrapper)
+net.utbox.client.ApiServiceStub.PauseFaxRequestE
+This class is used as a wrapper for pausing a fax request.
+Constructor Summary
+	PauseFaxRequestE()
+Initializes a newly created PauseFaxRequestE object 
+	
+
+Method Summary
+	
+
+	void
+	.setPauseFaxRequest(net.utbox.client.ApiServiceStub.PauseFaxRequest pauseFaxRequest)
+sets the pause fax request
+	
+
+PauseFax Request
+net.utbox.client.ApiServiceStub.PauseFaxRequest
+Pauses a fax message before it starts transmitting. This fax message must either be queued, starting or sending. Please note that fax cannot be paused if the message is currently being transmitted to the destination device.
+When making a pause request, you must provide at least a BroadcastRef, SendRef, or MessageRef. The function will also accept a combination of these to further narrow the request query.
+PauseFaxRequest should be wrapped in net.utbox.client.ApiServiceStub.PauseFaxRequestE to be used in ApiServiceStub.pauseFax()
+Constructor Summary
+	PauseFaxRequest()
+Initializes a newly created PauseFaxRequest object 
+	
+
+Method Summary
+	
+
+	void
+	.setBroadcastRef(String broadcastRef)
+sets user-defined broadcast reference
+	void
+	.setSendRef(String sendRef)
+sets user-defined send reference
+	void
+	.setMessageRef(String messageRef)
+sets user-defined message reference
+	
+
+
+
+________________
+
+
+
+
+PauseFax Request limiting by BroadcastRef:
+1.         // Setup PauseFaxRequest
+2.         PauseFaxRequest pauseFaxRequest = new PauseFaxRequest();
+3.         pauseFaxRequest.setBroadcastRef("broadcast-ref-1");
+4.         
+5.         PauseFaxRequestE pauseFaxRequestE = new PauseFaxRequestE();
+6.         pauseFaxRequestE.setPauseFaxRequest(pauseFaxRequest);
+7.         
+8.         SendFaxResponseE response = apiServiceStub.pauseFax("username", 
+9.         "password", pauseFaxRequestE);
+10. 11.         System.out.println(response.getOMElement(null, 
+12.         OMAbstractFactory.getOMFactory()).toStringWithConsume());
+
+
+PauseFax Request limiting by SendRef:
+1.         // Setup PauseFaxRequest
+2.         PauseFaxRequest pauseFaxRequest = new PauseFaxRequest();
+3.         pauseFaxRequest.setSendRef("send-ref-1");
+4.         
+5.         PauseFaxRequestE pauseFaxRequestE = new PauseFaxRequestE();
+6.         pauseFaxRequestE.setPauseFaxRequest(pauseFaxRequest);
+7.         
+8.         SendFaxResponseE response = apiServiceStub.pauseFax("username",    
+9.         "password", pauseFaxRequestE);
+10. 11.         System.out.println(response.getOMElement(null, 
+12.         OMAbstractFactory.getOMFactory()).toStringWithConsume());
+
+
+PauseFax Request limiting by MessageRef:
+1.         // TODO: Setup PauseFaxRequest
+2.         PauseFaxRequest pauseFaxRequest = new PauseFaxRequest();
+3.         pauseFaxRequest.setMessageRef("message-ref-1");
+4.         
+5.         PauseFaxRequestE pauseFaxRequestE = new PauseFaxRequestE();
+6.         pauseFaxRequestE.setPauseFaxRequest(pauseFaxRequest);
+7.         
+8.         SendFaxResponseE response = apiServiceStub.pauseFax("username", 
+9.         "username", pauseFaxRequestE);
+10. 11.         System.out.println(response.getOMElement(null, 
+12.         OMAbstractFactory.getOMFactory()).toStringWithConsume());
+
+
+
+
+PauseFaxResponseE (Wrapper)
+net.utbox.client.ApiServiceStub.PauseFaxResponseE
+This class is used as a wrapper of PauseFaxResponse.
+Constructor Summary
+	PauseFaxResponseE()
+Initializes a newly created PauseFaxResponseE object 
+	
+
+Method Summary
+	
+
+	void
+	.getOMElement(QName parentQname, OMFactory factory)
+	net.utbox.client.ApiServiceStub.PauseFaxResponse
+	.getPauseFaxResponse()
+	
+
+PauseFaxResponse
+net.utbox.client.ApiServiceStub.PauseFaxResponse
+The response received from a PauseFaxRequest matches the response you receive when calling the FaxStatus method call with a “send” verbosity level.
+Constructor Summary
+	PauseFaxResponse()
+Initializes a newly created PauseFaxResponse object 
+	
+
+
+
+
+
+
+
+________________
+
+
+ResumeFaxRequestE (Wrapper)
+net.utbox.client.ApiServiceStub.ResumeFaxRequestE
+This class is used as a wrapper for resuming a fax request.
+Constructor Summary
+	ResumeFaxRequestE()
+Initializes a newly created ResumeFaxRequestE object 
+	
+
+Method Summary
+	
+
+	void
+	.setResumeFaxRequest(net.utbox.client.ApiServiceStub.ResumeFaxRequest resumeFaxRequest)
+sets the resume fax request
+	
+
+ResumeFax Request
+Resumes a paused fax message. This fax message must be in the paused status.
+When making a resume request, you must provide at least a BroadcastRef, SendRef, or MessageRef. The function will also accept a combination of these to further narrow the request query.
+ResumeFaxRequest should be wrapped in net.utbox.client.ApiServiceStub.ResumeFaxRequestE to be used in ApiServiceStub.resumeFax()
+Constructor Summary
+	ResumeFaxRequest()
+Initializes a newly created ResumeFaxRequest object 
+	
+
+Method Summary
+	
+
+	void
+	.setBroadcastRef(String broadcastRef)
+sets user-defined broadcast reference
+	void
+	.setSendRef(String sendRef)
+sets user-defined send reference
+	void
+	.setMessageRef(String messageRef)
+sets user-defined message reference
+	
+
+
+
+
+
+________________
+
+
+ResumeFax Request limiting by BroadcastRef:
+1.        // Setup ResumeFaxRequest
+2.         ResumeFaxRequest resumeFaxRequest = new ResumeFaxRequest();
+3.         resumeFaxRequest.setBroadcastRef("broadcast-ref-1");
+4.         
+5.         ResumeFaxRequestE resumeFaxRequestE = new ResumeFaxRequestE();
+6.         resumeFaxRequestE.setResumeFaxRequest(resumeFaxRequest);
+7.         
+8.         SendFaxResponseE response = apiServiceStub.resumeFax("username", 
+9.         "password", resumeFaxRequestE);
+10. 11.         System.out.println(response.getOMElement(null, 
+12.         OMAbstractFactory.getOMFactory()).toStringWithConsume());
+
+
+ResumeFax Request limiting by SendRef:
+1.         // Setup ResumeFaxRequest
+2.         ResumeFaxRequest resumeFaxRequest = new ResumeFaxRequest();
+3.         resumeFaxRequest.setSendRef("send-ref-1");
+4.         
+5.         ResumeFaxRequestE resumeFaxRequestE = new ResumeFaxRequestE();
+6.         resumeFaxRequestE.setResumeFaxRequest(resumeFaxRequest);
+7.         
+8.         SendFaxResponseE response = apiServiceStub.resumeFax("username", 
+9.         "password", resumeFaxRequestE);
+10. 11.         System.out.println(response.getOMElement(null, 
+12.         OMAbstractFactory.getOMFactory()).toStringWithConsume());
+
+
+ResumeFax Request limiting by MessageRef:
+1.         // Setup ResumeFaxRequest
+2.         ResumeFaxRequest resumeFaxRequest = new ResumeFaxRequest();
+3.         resumeFaxRequest.setMessageRef("message-ref-1");
+4.         
+5.         ResumeFaxRequestE resumeFaxRequestE = new ResumeFaxRequestE();
+6.         resumeFaxRequestE.setResumeFaxRequest(resumeFaxRequest);
+7.         
+8.   SendFaxResponseE response = 
+9.   apiServiceStub.resumeFax("username", "password", 
+10.   resumeFaxRequestE);
+11. 12.   System.out.println(response.getOMElement(null, 
+13.   OMAbstractFactory.getOMFactory()).toStringWithConsume());
+
+
+
+
+ResumeFaxResponseE (Wrapper)
+net.utbox.client.ApiServiceStub.ResumeFaxResponseE
+This class is used as a wrapper of ResumeFaxResponse.
+Constructor Summary
+	ResumeFaxResponseE()
+Initializes a newly created ResumeFaxResponseE object 
+	
+
+Method Summary
+	
+
+	void
+	.getOMElement(QName parentQname, OMFactory factory)
+	net.utbox.client.ApiServiceStub.ResumeFaxResponse
+	.getResumeFaxResponse()
+	
+
+ResumeFaxResponse
+net.utbox.client.ApiServiceStub.ResumeFaxResponse
+The response received from a ResumeFaxRequest matches the response you receive when calling the FaxStatus method call with a “send” verbosity level.
+Constructor Summary
+	ResumeFaxResponse()
+Initializes a newly created ResumeFaxResponse object 
+	
+
+[a]erika.ajes:
+Highlighted methods expected but are not generated by axis2. Should I still include these?
