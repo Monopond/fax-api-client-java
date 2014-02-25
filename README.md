@@ -1024,6 +1024,7 @@ This function provides you with a method to generate a preview of a saved docume
 
 | **Name** | **Required** | **Type** | **Description** | **Default** |
 |--- | --- | --- | --- | ---|
+| **setMessageRef** | **X** | *String* | A unique user-provided identifier that is used to identify the fax message. | |
 | **setResolution** |  | *Resolution* |Resolution setting of the fax document. Refer to the resolution table below for possible resolution values.| normal |
 | **setDitheringTechnique** | | *FaxDitheringTechnique* | Applies a custom dithering method to the fax document before transmission. | |
 | **setDocMergeData** | | *DocMergeData_type1* | Each mergefield has a key and a value. The system will look for the keys in a document and replace them with their corresponding value. ||
