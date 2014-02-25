@@ -25,9 +25,13 @@ import java.util.List;
 
 public class SampleClient {
 
+        private final static STRING WSDL_TEST_URL = "https://test.api.monopond.com/fax/soap/v2.1";
+
+        private final static STRING WSDL_PROD_URL = "https://api.monopond.com/fax/soap/v2.1";
+
 	public static void main(String[] args) throws Exception {
 		//create a new apiServiceStub.
-		ApiServiceStub apiServiceStub = new ApiServiceStub();
+		ApiServiceStub apiServiceStub = new ApiServiceStub(WSDL_PROD_URL);
 
 		//TODO: change user credentials
 		String username = "username";
