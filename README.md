@@ -429,6 +429,7 @@ Represents a fax document to be sent through the system. Supported file types ar
 
 **Name**|**Required**|**Type**|**Description**|**Default**
 -----|-----|-----|-----|-----
+**DocumentRef**| **X** | *String* | Unique identifier for the document to be uploaded. |
  **setFileName** |**X**|String|The document filename including extension. This is important as it is used to help identify the document MIME type.|
  **setFileData** |**X**|Base64|The document encoded in Base64 format.|
  **setOrder** | | Integer|If multiple documents are defined on a message this value will determine the order in which they will be transmitted.|0|
@@ -1028,7 +1029,7 @@ This function provides you with a method to generate a preview of a saved docume
 
 | **Name** | **Required** | **Type** | **Description** | **Default** |
 |--- | --- | --- | --- | ---|
-| **setMessageRef** | **X** | *String* | A unique user-provided identifier that is used to identify the fax message. | |
+|**setDocumentRef**| **X** | *String* | Unique identifier for the document to be uploaded. ||
 | **setResolution** |  | *Resolution* |Resolution setting of the fax document. Refer to the resolution table below for possible resolution values.| normal |
 | **setDitheringTechnique** | | *FaxDitheringTechnique* | Applies a custom dithering method to the fax document before transmission. | |
 | **setDocMergeData** | | *DocMergeData_type1* | Each mergefield has a key and a value. The system will look for the keys in a document and replace them with their corresponding value. ||
