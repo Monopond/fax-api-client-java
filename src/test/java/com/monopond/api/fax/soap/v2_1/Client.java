@@ -19,8 +19,8 @@ public class Client {
 
 	private ApiServiceStub apiServiceStub;
 
-	private String username = "timtest";
-	private String password = "gnome4life";
+	private String username = "username";
+	private String password = "password";
 	
 	@Before
 	public void setup() throws Exception {
