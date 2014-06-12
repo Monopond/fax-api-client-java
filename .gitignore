@@ -1,4 +1,5 @@
 target
+lib
 
 *.class
 *.iml
@@ -6,3 +7,4 @@ target
 
 # Package Files #
 *.ear
+*.jar
