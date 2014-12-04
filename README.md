@@ -9,9 +9,6 @@ Monopond Fax API Java Client
 * Provides concrete classes that you can use to map values to requests and read responses.
 * This file was auto-generated from WSDL by the Apache Axis2 version: 1.6.2
 
-###Basic Usage:
-* Import ApiServiceStub and Axis2 libraries.
-
 #Building A Request
 
 
