@@ -13,7 +13,6 @@ Monopond Fax API Java Client
 * Import ApiServiceStub and Axis2 libraries.
 
 #Building A Request
-...
 
 
 #SendFax
