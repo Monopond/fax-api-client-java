@@ -4,10 +4,13 @@ api-client-java
 Monopond Fax API Java Client
 
 ###Overview:
-...
+* This is a SOAP Web Service client for Monopond Web Services built on top of Java.
+* Requires <a href="http://axis.apache.org/axis2/java/core/">Axis2</a> libraries.
+* Provides concrete classes that you can use to map values to requests and read responses.
+* This file was auto-generated from WSDL by the Apache Axis2 version: 1.6.2
 
 ###Basic Usage:
-...
+* Import ApiServiceStub and Axis2 libraries.
 
 #Building A Request
 ...
@@ -23,13 +26,89 @@ Your specific faxing requirements will dictate which send request type below sho
 To send a fax to a single destination a request similar to the following example can be used:
 
 ```java
-code here
+//create a new instance of ApiServiceStub
+ApiServiceStub apiServiceStub = new ApiServiceStub();
+
+//create a new ApiFaxDocument
+ApiFaxDocument apiFaxDocument = new ApiFaxDocument();
+
+//set the filedata (in base64 format) and filename
+apiFaxDocument.setFileData("VGhpcyBpcyBhIGZheA==");
+apiFaxDocument.setFileName("test.txt");
+Documents_type0 documentsType0 = new Documents_type0();
+documentsType0.addDocument(apiFaxDocument);
+
+//create a new fax message
+ApiFaxMessage apiFaxMessage = new ApiFaxMessage();
+apiFaxMessage.setMessageRef("test-1-1-1");
+apiFaxMessage.setSendTo("6011111111");
+apiFaxMessage.setSendFrom("Test Fax");
+apiFaxMessage.setResolution(FaxResolution.normal);
+apiFaxMessage.setDocuments(documentsType0);
+
+//add the fax message to faxMessagesType1
+FaxMessages_type1 faxMessagesType1 = new FaxMessages_type1();
+faxMessagesType1.addFaxMessage(apiFaxMessage);
+
+//create an instance of SendFaxRequest
+SendFaxRequest sendFaxRequest = new SendFaxRequest();
+sendFaxRequest.setFaxMessages(faxMessagesType1);
+SendFaxRequestE sendFaxRequestE = new SendFaxRequestE();
+sendFaxRequestE.setSendFaxRequest(sendFaxRequest);
+
+//call the sendFax method
+SendFaxResponseE response = apiServiceStub.sendFax("myUsername",
+        "myPassword", sendFaxRequestE);
+System.out.println(response.getOMElement(null,
+        OMAbstractFactory.getOMFactory()).toStringWithConsume());
+}
 ```
 
 ###Sending multiple faxes:
 To send faxes to multiple destinations a request similar to the following example can be used. Please note the addition of another “FaxMessage”:
 ```java
-code here
+//create a new instance of ApiServiceStub
+ApiServiceStub apiServiceStub = new ApiServiceStub();
+
+//create a new ApiFaxDocument
+ApiFaxDocument apiFaxDocument = new ApiFaxDocument();
+
+//set the filedata (in base64 format) and filename
+apiFaxDocument.setFileData("VGhpcyBpcyBhIGZheA==");
+apiFaxDocument.setFileName("test.txt");
+Documents_type0 documentsType0 = new Documents_type0();
+documentsType0.addDocument(apiFaxDocument);
+
+//create your fax messages
+ApiFaxMessage apiFaxMessage1 = new ApiFaxMessage();
+apiFaxMessage1.setMessageRef("test-1-1-1");
+apiFaxMessage1.setSendTo("6011111111");
+apiFaxMessage1.setSendFrom("Test Fax");
+apiFaxMessage1.setResolution(FaxResolution.normal);
+apiFaxMessage1.setDocuments(documentsType0);
+ApiFaxMessage apiFaxMessage2 = new ApiFaxMessage();
+apiFaxMessage2.setMessageRef("test-1-1-1");
+apiFaxMessage2.setSendTo("6011111111");
+apiFaxMessage2.setSendFrom("Test Fax");
+apiFaxMessage2.setResolution(FaxResolution.normal);
+apiFaxMessage2.setDocuments(documentsType0);
+
+//add the two fax messages to faxMessagesType1
+FaxMessages_type1 faxMessagesType1 = new FaxMessages_type1();
+faxMessagesType1.addFaxMessage(apiFaxMessage1);
+faxMessagesType1.addFaxMessage(apiFaxMessage2);
+
+//create an instance of SendFaxRequest
+SendFaxRequest sendFaxRequest = new SendFaxRequest();
+sendFaxRequest.setFaxMessages(faxMessagesType1);
+SendFaxRequestE sendFaxRequestE = new SendFaxRequestE();
+sendFaxRequestE.setSendFaxRequest(sendFaxRequest);
+
+//call the sendFax method
+SendFaxResponseE response = apiServiceStub.sendFax("myUsername",
+"myPassword", sendFaxRequestE);
+System.out.println(response.getOMElement(null,
+OMAbstractFactory.getOMFactory()).toStringWithConsume());
 ```
 ###Sending faxes to multiple destinations with the same document (broadcasting):
 To send the same fax content to multiple destinations (broadcasting) a request similar to the example below can be used.
@@ -37,59 +116,50 @@ To send the same fax content to multiple destinations (broadcasting) a request s
 This method is recommended for broadcasting as it takes advantage of the multiple tiers in the send request. This eliminates the repeated parameters out of the individual fax message elements which are instead inherited from the parent send fax request. An example below shows “SendFrom” being used for both FaxMessages. While not shown in the example below further control can be achieved over individual fax elements to override the parameters set in the parent.
 
 ```java
-code here
+//create a new instance of ApiServiceStub
+ApiServiceStub apiServiceStub = new ApiServiceStub();
+
+//create a new ApiFaxDocument
+ApiFaxDocument apiFaxDocument = new ApiFaxDocument();
+
+//set the filedata (in base64 format) and filename
+apiFaxDocument.setFileData("VGhpcyBpcyBhIGZheA==");
+apiFaxDocument.setFileName("test.txt");
+Documents_type1 documentsType1 = new Documents_type1();
+documentsType1.addDocument(apiFaxDocument);
+
+//create your fax messages
+ApiFaxMessage apiFaxMessage1 = new ApiFaxMessage();
+apiFaxMessage1.setMessageRef("test-1-1-1");
+apiFaxMessage1.setSendTo("6011111111");
+ApiFaxMessage apiFaxMessage2 = new ApiFaxMessage();
+apiFaxMessage2.setMessageRef("test-1-1-1");
+apiFaxMessage2.setSendTo("6011111111");
+
+//add the two fax messages to faxMessagesType1
+FaxMessages_type1 faxMessagesType1 = new FaxMessages_type1();
+faxMessagesType1.addFaxMessage(apiFaxMessage1);
+faxMessagesType1.addFaxMessage(apiFaxMessage2);
+
+//create an instance of SendFaxRequest
+SendFaxRequest sendFaxRequest = new SendFaxRequest();
+sendFaxRequest.setFaxMessages(faxMessagesType1);
+sendFaxRequest.setBroadcastRef("Broadcast-test-1");
+sendFaxRequest.setSendRef("Send-Ref-1");
+sendFaxRequest.setDocuments(documentsType1);
+sendFaxRequest.setSendFrom("Test Fax");
+SendFaxRequestE sendFaxRequestE = new SendFaxRequestE();
+sendFaxRequestE.setSendFaxRequest(sendFaxRequest);
+
+//call the sendFax method
+SendFaxResponseE response = apiServiceStub.sendFax("username",
+"password", sendFaxRequestE);
+System.out.println(response.getOMElement(null,
+OMAbstractFactory.getOMFactory()).toStringWithConsume());
 ```
 
 When sending multiple faxes in batch it is recommended to group them into requests of around 600 fax messages for optimal performance. If you are sending the same document to multiple destinations it is strongly advised to only attach the document once in the root of the send request rather than attaching a document for each destination.
 
-###Sending Microsoft Documents With DocMergeData:
-(This request only works in version 2.1(or higher) of the fax-api.)
-
-This request is used to send a Microsoft document with replaceable variables or merge fields. The merge field follows the pattern ```<mf:key>```.  If your key is ```field1```, it should be typed as ```<mf:field1>``` in the document. Note that the key must be unique within the whole document. The screenshots below are examples of what the request does.
-
-Original .doc file:
-
-![before](https://github.com/Monopond/fax-api/raw/master/img/DocMergeData/before.png)
-
-This is what the file looks like after the fields ```field1```,```field2``` and ```field3``` have been replaced with values ```lazy dog```, ```fat pig``` and ```fat pig```:
-
-![stamp](https://github.com/Monopond/fax-api/raw/master/img/DocMergeData/after.png)
-
-##### Sample Request
-The example below shows ```field1``` will be replaced by the value of ```Test```.
-
-
-```java
-code here
-```
-###Sending Tiff and PDF files with StampMergeData:
-(This request only works in version 2.1(or higher) of the fax-api.)
-
-This request allows a PDF or TIFF file to be stamped with an image or text, based on X-Y coordinates. The x and y coordinates (0,0) starts at the top left part of the document. The screenshots below are examples of what the request does.
-
-Original tiff file:
-
-![before](https://github.com/Monopond/fax-api/raw/master/img/StampMergeData/image_stamp/before.png)
-
-Sample stamp image:
-
-![stamp](https://github.com/Monopond/fax-api/raw/master/img/StampMergeData/image_stamp/stamp.png)
-
-This is what the tiff file looks like after stamping it with the image above:
-
-![after](https://github.com/Monopond/fax-api/raw/master/img/StampMergeData/image_stamp/after.png) 
-
-The same tiff file, but this time, with a text stamp:
-
-![after](https://github.com/Monopond/fax-api/raw/master/img/StampMergeData/text_stamp/after.png) 
-
-##### Sample Request
-
-The example below shows a PDF that will be stamped with the text “Hello” at xCoord=“1287” and yCoord=“421”, and an image at xCoord=“283” and yCoord=“120”
-
-```java
-code here
-```
 ###sendFaxRequest Parameters:
 **Name**|**Required**|**Type**|**Description**|**Default**
 -----|-----|-----|-----|-----
@@ -134,8 +204,7 @@ Represents a fax document to be sent through the system. Supported file types ar
 **FileName**|**X**|String|The document filename including extension. This is important as it is used to help identify the document MIME type.|
 **FileData**|**X**|Base64|The document encoded in Base64 format.|
 **Order** | | Integer|If multiple documents are defined on a message this value will determine the order in which they will be transmitted.|0|
-**DocMergeData**|||An Array of MergeFields|
-**StampMergeData**|||An Array of MergeFields|
+
 
 ***Resolution Levels:***
 
@@ -174,45 +243,6 @@ From TSID, To 61022221234 Mon Aug 28 15:32 2012 1 of 1
 **%%**|A literal % character
 
 TODO: The default value is set to: “From %from%, To %to%|%a %b %d %H:%M %Y”
-
-<a name="docMergeDataParameters"></a> 
-
-**DocMergeData Mergefield Parameters:**
-
-|**Name** | **Required** | **Type** | **Description** |
-|-----|-----|-----|-----|
-|**Key** | | *String* | A unique identifier used to determine which fields need replacing. |
-|**Value** | | *String* | The value that replaces the key. |
-
-<a name="stampMergeDataParameters"></a> 
-**StampMergeData Mergefield Parameters:**
-
-|**Name** | **Required** | **Type** | **Description** |
-|-----|-----|-----|-----|
-|**Key** |  | *StampMergeFieldKey* | Contains x and y coordinates where the ImageValue or TextValue should be placed. |
-|**TextValue** |  | *StampMergeFieldTextValue* | The text value that replaces the key. |
-|**ImageValue** |  | *StampMergeFieldImageValue* | The image value that replaces the key. |
-
- **StampMergeFieldKey Parameters:**
-
-| **Name** | **Required** | **Type** | **Description** |
-|----|-----|-----|-----|
-| **xCoord** |  | *Int* | X coordinate. |
-| **yCoord** |  | *Int* | Y coordinate. |
-
-**StampMergeFieldTextValue Parameters:**
-
-|**Name** | **Required** | **Type** | **Description** |
-|-----|-----|-----|-----|
-|**fontName** |  | *String* | Font name to be used. |
-|**fontSize** |  | *Decimal* | Font size to be used. |
-
-**StampMergeFieldImageValue Parameters:**
-
-|**Name** | **Required** | **Type** | **Description** |
-|-----|-----|-----|-----|
-|**fileName** |  | *String* | The document filename including extension. This is important as it is used to help identify the document MIME type. |
-|**fileData** |  | *Base64* | The document encoded in Base64 format. |
 
 ###Response
 The response received from a `SendFaxRequest` matches the response you receive when calling the `FaxStatus` method call with a `send` verbosity level.
@@ -257,25 +287,65 @@ There are multiple levels of verbosity available in the request; these are expla
 ###Sending a faxStatus Request with “brief” verbosity:
 
 ```java
-code here
+// Setup faxStatusRequest
+FaxStatusRequest faxStatusRequest = new FaxStatusRequest();
+faxStatusRequest.setBroadcastRef("test-ref");
+faxStatusRequest.setVerbosity(FaxStatusLevel.brief);
+
+FaxStatusRequestE faxStatusRequestE = new FaxStatusRequestE();
+faxStatusRequestE.setFaxStatusRequest(faxStatusRequest);
+
+// Call fax status method
+SendFaxResponseE response = apiServiceStub.faxStatus("username",
+"password", faxStatusRequestE);
 ```
 
 ###Sending a faxStatus Request with “send” verbosity:
 
 ```java
-code here
+// Setup faxStatusRequest
+FaxStatusRequest faxStatusRequest = new FaxStatusRequest();
+faxStatusRequest.setBroadcastRef("test-ref");
+faxStatusRequest.setVerbosity(FaxStatusLevel.send);
+
+FaxStatusRequestE faxStatusRequestE = new FaxStatusRequestE();
+faxStatusRequestE.setFaxStatusRequest(faxStatusRequest);
+
+// Call fax status method
+SendFaxResponseE response = apiServiceStub.faxStatus("username",
+"password", faxStatusRequestE);
 ```
 
 ###Sending a faxStatus Request with “details” verbosity:
 
 ```java
-code here
+// Setup faxStatusRequest
+FaxStatusRequest faxStatusRequest = new FaxStatusRequest();
+faxStatusRequest.setBroadcastRef("test-ref");
+faxStatusRequest.setVerbosity(FaxStatusLevel.details);
+
+FaxStatusRequestE faxStatusRequestE = new FaxStatusRequestE();
+faxStatusRequestE.setFaxStatusRequest(faxStatusRequest);
+
+// Call fax status method
+SendFaxResponseE response = apiServiceStub.faxStatus("username",
+"password", faxStatusRequestE);
 ```
 
 ###Sending a faxStatus Request with “results” verbosity:
 
 ```java
-code here
+// Setup faxStatusRequest
+FaxStatusRequest faxStatusRequest = new FaxStatusRequest();
+faxStatusRequest.setBroadcastRef("test-ref");
+faxStatusRequest.setVerbosity(FaxStatusLevel.results);
+
+FaxStatusRequestE faxStatusRequestE = new FaxStatusRequestE();
+faxStatusRequestE.setFaxStatusRequest(faxStatusRequest);
+
+// Call fax status method
+SendFaxResponseE response = apiServiceStub.faxStatus("username",
+"password", faxStatusRequestE);
 ```
 ###Response
 The response received depends entirely on the verbosity level specified.
@@ -401,18 +471,39 @@ When making a stop request you must provide at least a `BroadcastRef`, `SendRef`
 
 ###StopFax Request limiting by BroadcastRef:
 ```java
-code here
+// Setup stopFaxRequest
+StopFaxRequest stopFaxRequest = new StopFaxRequest();
+stopFaxRequest.setBroadcastRef("broadcast-ref-1");
+
+StopFaxRequestE stopFaxRequestE = new StopFaxRequestE();
+stopFaxRequestE.setStopFaxRequest(stopFaxRequest);
+SendFaxResponseE response = apiServiceStub.stopFax("username",
+"password", stopFaxRequestE);
 ```
 
 ###StopFax Request limiting by SendRef:
 
 ```java
-code here
+// Setup stopFaxRequest
+StopFaxRequest stopFaxRequest = new StopFaxRequest();
+stopFaxRequest.setSendRef("send-ref-1");
+
+StopFaxRequestE stopFaxRequestE = new StopFaxRequestE();
+stopFaxRequestE.setStopFaxRequest(stopFaxRequest);
+SendFaxResponseE response = apiServiceStub.stopFax("username",
+"password", stopFaxRequestE);
 ```
 
 ###StopFax Request limiting by MessageRef:
 ```java
-code here
+// Setup stopFaxRequest
+StopFaxRequest stopFaxRequest = new StopFaxRequest();
+stopFaxRequest.setMessageRef("message-ref-1");
+
+StopFaxRequestE stopFaxRequestE = new StopFaxRequestE();
+stopFaxRequestE.setStopFaxRequest(stopFaxRequest);
+SendFaxResponseE response = apiServiceStub.stopFax("username",
+"password", stopFaxRequestE);
 ```
 
 
@@ -442,16 +533,46 @@ When making a pause request, you must provide at least a `BroadcastRef`, `SendRe
 
 ###PauseFax Request limiting by BroadcastRef:
 ```java
-code here
+// Setup PauseFaxRequest
+PauseFaxRequest pauseFaxRequest = new PauseFaxRequest();
+pauseFaxRequest.setBroadcastRef("broadcast-ref-1");
+
+PauseFaxRequestE pauseFaxRequestE = new PauseFaxRequestE();
+pauseFaxRequestE.setPauseFaxRequest(pauseFaxRequest);
+
+SendFaxResponseE response = apiServiceStub.pauseFax("username",
+"password", pauseFaxRequestE);
+System.out.println(response.getOMElement(null,
+OMAbstractFactory.getOMFactory()).toStringWithConsume());
 ```
 
 ###PauseFax Request limiting by SendRef:
 ```java
-code here
+// Setup PauseFaxRequest
+PauseFaxRequest pauseFaxRequest = new PauseFaxRequest();
+pauseFaxRequest.setSendRef("send-ref-1");
+
+PauseFaxRequestE pauseFaxRequestE = new PauseFaxRequestE();
+pauseFaxRequestE.setPauseFaxRequest(pauseFaxRequest);
+
+SendFaxResponseE response = apiServiceStub.pauseFax("username",
+"password", pauseFaxRequestE);
+System.out.println(response.getOMElement(null,
+OMAbstractFactory.getOMFactory()).toStringWithConsume());
 ```
 ###PauseFax Request limiting by MessageRef:
 ```java
-code here
+// TODO: Setup PauseFaxRequest
+PauseFaxRequest pauseFaxRequest = new PauseFaxRequest();
+pauseFaxRequest.setMessageRef("message-ref-1");
+
+PauseFaxRequestE pauseFaxRequestE = new PauseFaxRequestE();
+pauseFaxRequestE.setPauseFaxRequest(pauseFaxRequest);
+
+SendFaxResponseE response = apiServiceStub.pauseFax("username",
+"username", pauseFaxRequestE);
+System.out.println(response.getOMElement(null,
+OMAbstractFactory.getOMFactory()).toStringWithConsume());
 ```
 
 ###Response
@@ -476,15 +597,46 @@ When making a resume request, you must provide at least a `BroadcastRef`, `SendR
 
 ###ResumeFax Request limiting by BroadcastRef:
 ```java
-code here
+// Setup ResumeFaxRequest
+ResumeFaxRequest resumeFaxRequest = new ResumeFaxRequest();
+resumeFaxRequest.setBroadcastRef("broadcast-ref-1");
+
+ResumeFaxRequestE resumeFaxRequestE = new ResumeFaxRequestE();
+resumeFaxRequestE.setResumeFaxRequest(resumeFaxRequest);
+
+SendFaxResponseE response = apiServiceStub.resumeFax("username",
+"password", resumeFaxRequestE);
+System.out.println(response.getOMElement(null,
+OMAbstractFactory.getOMFactory()).toStringWithConsume());
 ```
 ###ResumeFax Request limiting by SendRef:
 ```java
-code here
+// Setup ResumeFaxRequest
+ResumeFaxRequest resumeFaxRequest = new ResumeFaxRequest();
+resumeFaxRequest.setSendRef("send-ref-1");
+
+ResumeFaxRequestE resumeFaxRequestE = new ResumeFaxRequestE();
+resumeFaxRequestE.setResumeFaxRequest(resumeFaxRequest);
+
+SendFaxResponseE response = apiServiceStub.resumeFax("username",
+"password", resumeFaxRequestE);
+System.out.println(response.getOMElement(null,
+OMAbstractFactory.getOMFactory()).toStringWithConsume());
 ```
 ###ResumeFax Request limiting by MessageRef:
 ```java
-code here
+// Setup ResumeFaxRequest
+ResumeFaxRequest resumeFaxRequest = new ResumeFaxRequest();
+resumeFaxRequest.setMessageRef("message-ref-1");
+
+ResumeFaxRequestE resumeFaxRequestE = new ResumeFaxRequestE();
+resumeFaxRequestE.setResumeFaxRequest(resumeFaxRequest);
+
+SendFaxResponseE response =
+apiServiceStub.resumeFax("username", "password",
+resumeFaxRequestE);
+System.out.println(response.getOMElement(null,
+OMAbstractFactory.getOMFactory()).toStringWithConsume());
 ```
 
 
@@ -492,147 +644,8 @@ code here
 The response received from a `ResumeFaxRequest` is the same response you would receive when calling the `FaxStatus` method call with the `send` verbosity level. 
 
 ###SOAP Faults
-This function will throw one of the following SOAP faults/exceptions if something went wrong:
-**InvalidArgumentsException**, **NoMessagesFoundException**, or **InternalServerException**.
+This function will throw one of the following SOAP faults/exceptions if something went wrong: **InvalidArgumentsException**, **NoMessagesFoundException**, or **InternalServerException**. 
 You can find more details on these faults [here](#section5).
-
-##PreviewFaxDocument
-###Description
-
-This function provides you with a method to generate a preview of a saved document at different resolutions with various dithering settings. It returns a tiff data in base64 along with a page count.
-
-###Sample Request
-```java
-code here
-```
-
-###Request
-**FaxDocumentPreviewRequest Parameters:**
-
-| **Name** | **Required** | **Type** | **Description** | **Default** |
-|--- | --- | --- | --- | ---|
-|**Resolution**|  | *Resolution* |Resolution setting of the fax document. Refer to the resolution table below for possible resolution values.| normal |
-|**DitheringTechnique**| | *FaxDitheringTechnique* | Applies a custom dithering method to the fax document before transmission. | |
-|**DocMergeData** | | *Array of DocMergeData MergeFields* | Each mergefield has a key and a value. The system will look for the keys in a document and replace them with their corresponding value. ||
-|**StampMergeData** | | *Array of StampMergeData MergeFields* | Each mergefield has a key a corressponding TextValue/ImageValue. The system will look for the keys in a document and replace them with their corresponding value. | | |
-
-**DocMergeData Mergefield Parameters:**
-
-|**Name** | **Required** | **Type** | **Description** |
-|-----|-----|-----|-----|
-|**Key** | | *String* | A unique identifier used to determine which fields need replacing. |
-|**Value** | | *String* | The value that replaces the key. |
-
-**StampMergeData Mergefield Parameters:**
-
-|**Name** | **Required** | **Type** | **Description** |
-|-----|-----|-----|-----|
-|**Key** |  | *StampMergeFieldKey* | Contains x and y coordinates where the ImageValue or TextValue should be placed. |
-|**TextValue** |  | *StampMergeFieldTextValue* | The text value that replaces the key. |
-|**ImageValue** |  | *StampMergeFieldImageValue* | The image value that replaces the key. |
-
- **StampMergeFieldKey Parameters:**
-
-| **Name** | **Required** | **Type** | **Description** |
-|----|-----|-----|-----|
-| **xCoord** |  | *Int* | X coordinate. |
-| **yCoord** |  | *Int* | Y coordinate. |
-
-**StampMergeFieldTextValue Parameters:**
-
-|**Name** | **Required** | **Type** | **Description** |
-|-----|-----|-----|-----|
-|**fontName** |  | *String* | Font name to be used. |
-|**fontSize** |  | *Decimal* | Font size to be used. |
-
-**StampMergeFieldImageValue Parameters:**
-
-|**Name** | **Required** | **Type** | **Description** |
-|-----|-----|-----|-----|
-|**fileName** |  | *String* | The document filename including extension. This is important as it is used to help identify the document MIME type. |
-|**fileData** |  | *Base64* | The document encoded in Base64 format. |
-
-**FaxDitheringTechnique:**
-
-| Value | Fax Dithering Technique |
-| --- | --- |
-| **none** | No dithering. |
-| **normal** | Normal dithering.|
-| **turbo** | Turbo dithering.|
-| **darken** | Darken dithering.|
-| **darken_more** | Darken more dithering.|
-| **darken_extra** | Darken extra dithering.|
-| **lighten** | Lighten dithering.|
-| **lighten_more** | Lighten more dithering. |
-| **crosshatch** | Crosshatch dithering. |
-| **DETAILED** | Detailed dithering. |
-
-**Resolution Levels:**
-
-| **Value** | **Description** |
-| --- | --- |
-| **normal** | Normal standard resolution (98 scan lines per inch) |
-| **fine** | Fine resolution (196 scan lines per inch) |
-
-###Response
-**FaxDocumentPreviewResponse**
-
-**Name** | **Type** | **Description** 
------|-----|-----
-**TiffPreview** | *String* | A preview version of the document encoded in Base64 format. 
-**NumberOfPages** | *Int* | Total number of pages in the document preview.
-
-###SOAP Faults
-This function will throw one of the following SOAP faults/exceptions if something went wrong:
-**DocumentRefDoesNotExistException**, **InternalServerException**, **UnsupportedDocumentContentType**, **MergeFieldDoesNotMatchDocumentTypeException**, **UnknownHostException**.
-You can find more details on these faults in Section 5 of this document.You can find more details on these faults in the next section of this document.
-
-##SaveFaxDocument
-###Description
-
-This function allows you to upload a document and save it under a document reference (DocumentRef) for later use. (Note: These saved documents only last 30 days on the system.)
-
-###Sample Request
-
-```java
-code here
-```
-
-###Request
-**SaveFaxDocumentRequest Parameters:**
-
-| **Name** | **Required** | **Type** | **Description** |
-|--- | --- | --- | --- | ---|
-|**DocumentRef**| **X** | *String* | Unique identifier for the document to be uploaded. |
-|**FileName**| **X** | *String* | The document filename including extension. This is important as it is used to help identify the document MIME type. |
-| **FileData**|**X**| *Base64* |The document encoded in Base64 format.| |
-
-###SOAP Faults
-This function will throw one of the following SOAP faults/exceptions if something went wrong:
-**DocumentRefAlreadyExistsException**, **DocumentContentTypeNotFoundException**, **InternalServerException**.
-You can find more details on these faults in Section 5 of this document.You can find more details on these faults in the next section of this document.
-
-##DeleteFaxDocument
-###Description
-
-This function removes a saved fax document from the system.
-
-###Sample Request
-```java
-code here
-```
-
-###Request
-**DeleteFaxDocumentRequest Parameters:**
-
-| **Name** | **Required** | **Type** | **Description** |
-|--- | --- | --- | --- | ---|
-|**DocumentRef**| **X** | *String* | Unique identifier for the document to be deleted. |
-
-###SOAP Faults
-This function will throw one of the following SOAP faults/exceptions if something went wrong:
-**DocumentRefDoesNotExistException**, **InternalServerException**.
-You can find more details on these faults in Section 5 of this document.You can find more details on these faults in the next section of this document.
 
 <a name="section5"></a> 
 #More Information
