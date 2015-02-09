@@ -1,4 +1,8 @@
+target
+
 *.class
+*.iml
+.idea
 
 # Package Files #
 *.ear
