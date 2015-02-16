@@ -40841,6 +40841,12 @@ public class ApiServiceStub extends org.apache.axis2.client.Stub
                                     public static final java.lang.String _DETAILED =
                                         org.apache.axis2.databinding.utils.ConverterUtil.convertToString("DETAILED");
 
+                                public static final java.lang.String _imagemagick =
+                                        org.apache.axis2.databinding.utils.ConverterUtil.convertToString("imagemagick");
+
+                                public static final FaxDitheringTechnique imagemagick =
+                                    new FaxDitheringTechnique(_imagemagick,true);
+
                                 public static final FaxDitheringTechnique none =
                                     new FaxDitheringTechnique(_none,true);
 
